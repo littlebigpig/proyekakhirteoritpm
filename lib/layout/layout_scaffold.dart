@@ -13,14 +13,14 @@ class LayoutScaffold extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
-        color: Colors.lightBlue,
+        color: const Color.fromARGB(255, 93, 182, 255),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: GNav(
-            backgroundColor: Colors.lightBlue,
+            backgroundColor: const Color.fromARGB(255, 93, 182, 255),
             color: Colors.white,
             activeColor: Colors.white,
-            tabBackgroundColor: Colors.lightBlueAccent,
+            tabBackgroundColor: const Color.fromARGB(255, 128, 198, 255),
             gap: 8,
             onTabChange: (index) {
               navigationShell.goBranch(index);
@@ -28,8 +28,9 @@ class LayoutScaffold extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             tabs: const [
               GButton(icon: Icons.home, text: 'Home'),
-              GButton(icon: Icons.person, text: 'Anggota'),
-              GButton(icon: Icons.info, text: 'Informasi'),
+              GButton(icon: Icons.public, text: 'Countries'),
+              //GButton(icon: Icons.person, text: 'Anggota'),
+              GButton(icon: Icons.person, text: 'Profile'),
             ],
           ),
         ),

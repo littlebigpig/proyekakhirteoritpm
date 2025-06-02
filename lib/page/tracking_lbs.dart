@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class _MapSampleState extends State<MapSample> {
   GoogleMapController? mapController;
   LatLng _currentPosition = const LatLng(-6.200000, 106.816666); // Jakarta
   String _positionText = "Latitude: N/A\nLongitude: N/A";
+  String _address = "Address: N/A";
 
   @override
   void initState() {
@@ -24,7 +27,7 @@ class _MapSampleState extends State<MapSample> {
       desiredAccuracy: LocationAccuracy.high,
     );
 
-    if (!mounted) return; // <--- Cegah setState kalau widget udah dispose
+    if (!mounted) return;
 
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
@@ -32,7 +35,34 @@ class _MapSampleState extends State<MapSample> {
           "Latitude: ${position.latitude}\nLongitude: ${position.longitude}";
     });
 
+    // Get address from coordinates
+    await _getPlace(position.latitude, position.longitude);
+
     mapController?.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+  }
+
+  Future<void> _getPlace(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await geocoding.placemarkFromCoordinates(latitude, longitude);
+      Placemark placeMark = placemarks[0];
+      String name = placeMark.name ?? '';
+      String subLocality = placeMark.subLocality ?? '';
+      String locality = placeMark.locality ?? '';
+      String administrativeArea = placeMark.administrativeArea ?? '';
+      String postalCode = placeMark.postalCode ?? '';
+      String country = placeMark.country ?? '';
+      
+      String address = "$name, $subLocality, $locality, $administrativeArea $postalCode, $country";
+
+      setState(() {
+        _address = "Address: $address";
+      });
+    } catch (e) {
+      print("Error getting address: $e");
+      setState(() {
+        _address = "Address: Unable to fetch address";
+      });
+    }
   }
 
   void _showLocationDialog() {
@@ -44,7 +74,7 @@ class _MapSampleState extends State<MapSample> {
             'Omah',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          content: Text(_positionText),
+          content: Text('$_positionText\n$_address'),
           actions: [
             TextButton(
               onPressed: () {
@@ -85,10 +115,9 @@ class _MapSampleState extends State<MapSample> {
             ),
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
-            zoomControlsEnabled: false, // disembunyiin tombol default
+            zoomControlsEnabled: false,
           ),
 
-          // posisi
           Positioned(
             top: 10,
             right: 10,
@@ -121,7 +150,6 @@ class _MapSampleState extends State<MapSample> {
             ),
           ),
 
-          // loc
           Positioned(
             bottom: 130,
             right: 10,
@@ -145,7 +173,6 @@ class _MapSampleState extends State<MapSample> {
             ),
           ),
 
-          // zoom in/out
           Positioned(
             bottom: 10,
             right: 10,

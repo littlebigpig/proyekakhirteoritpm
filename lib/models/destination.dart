@@ -9,6 +9,7 @@ class Destination {
 
 final List<Destination> destinations = [
   Destination(label: 'Home', icon: Icons.home),
-  Destination(label: 'Anggota', icon: Icons.person),
+  Destination(label: 'Countries', icon: Icons.public),
+  //Destination(label: 'Anggota', icon: Icons.person),
   Destination(label: 'Informasi', icon: Icons.info),
 ];

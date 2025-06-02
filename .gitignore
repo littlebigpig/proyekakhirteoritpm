@@ -46,3 +46,5 @@ app.*.map.json
 
 # Secret
 /android/app/src/main/res/values/strings.xml
+
+lib/config/api_config.dart

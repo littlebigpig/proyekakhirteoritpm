@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:tugas2teori/models/daftar_situs.dart';
 import 'package:tugas2teori/router/router.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas2teori/services/database_helper.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize database
+  final dbHelper = DatabaseHelper();
+  await dbHelper.database;
+
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => DaftarSitus())],
@@ -21,15 +29,15 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       theme: ThemeData(
         colorScheme: ColorScheme.light(
-          primary: Colors.lightBlue, // Warna utama light blue
+          primary: const Color.fromARGB(255, 93, 182, 255), // Warna utama light blue
           secondary: Colors.lightBlueAccent, // Warna sekunder
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: const Color.fromARGB(255, 93, 182, 255),
           foregroundColor: Colors.white, // Warna teks appbar
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: const Color.fromARGB(255, 93, 182, 255),
         ),
       ),
       debugShowCheckedModeBanner: false,

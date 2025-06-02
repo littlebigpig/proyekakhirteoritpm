@@ -1,36 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/database_helper.dart';
 
-class LoginScreen extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       String name = nameController.text;
+      String email = emailController.text;
       String password = passwordController.text;
+      String confirmPassword = confirmPasswordController.text;
 
-      final dbHelper = DatabaseHelper();
-      final user = await dbHelper.verifyUser(name, password);
-
-      if (user != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool("is_logged_in", true);
-        await prefs.setString('username', name);
-        context.go('/home');
-      } else {
+      if (password != confirmPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Username atau password salah")),
+          SnackBar(content: Text("Password tidak sama")),
         );
+        return;
       }
+
+      // Here you would typically save user data to a database
+      // For now, we'll just save to SharedPreferences and navigate to login
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('registered_name', name);
+      await prefs.setString('registered_email', email);
+      await prefs.setString('registered_password', password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registrasi berhasil! Silakan login")),
+      );
+
+      // Navigate back to login screen
+      context.go('/login');
     }
   }
 
@@ -39,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -59,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 24),
                   Text(
-                    "Selamat Datang",
+                    "Daftar Akun Baru",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -68,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Silakan masuk ke akun Anda",
+                    "Silakan lengkapi data diri Anda",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -81,9 +91,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: "Name",
                       prefixIcon: Icon(Icons.person_outline, color: Color(0xFF7BC6FF)),
                     ),
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.text,
                     validator: (value) =>
                         value!.isEmpty ? "Name tidak boleh kosong" : null,
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF7BC6FF)),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Email tidak boleh kosong";
+                      }
+                      if (!value.contains('@')) {
+                        return "Email tidak valid";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
@@ -93,17 +121,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF7BC6FF)),
                     ),
                     obscureText: true,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Password tidak boleh kosong";
+                      }
+                      if (value.length < 6) {
+                        return "Password minimal 6 karakter";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: "Konfirmasi Password",
+                      prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF7BC6FF)),
+                    ),
+                    obscureText: true,
                     validator: (value) =>
-                        value!.isEmpty ? "Password tidak boleh kosong" : null,
+                        value!.isEmpty ? "Konfirmasi password tidak boleh kosong" : null,
                   ),
                   SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: _login,
+                      onPressed: _register,
                       child: Text(
-                        "Login",
+                        "Register",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -116,13 +162,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Belum punya akun? ",
+                        "Sudah punya akun? ",
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       TextButton(
-                        onPressed: () => context.go('/register'),
+                        onPressed: () => context.go('/login'),
                         child: Text(
-                          "Daftar",
+                          "Login",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Color(0xFF7BC6FF),

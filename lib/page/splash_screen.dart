@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     }
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 3));
 
     if (username != null && username.isNotEmpty) {
       context.go('/home');
@@ -38,21 +38,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade100,
+      backgroundColor: const Color.fromARGB(255, 93, 182, 255),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_on, size: 80, color: Colors.blue),
-            SizedBox(height: 20),
-            Text(
-              "Selamat Datang",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Image.asset(
+              'assets/natnow.png',
+              width: 400,
+              fit: BoxFit.contain,
             ),
-            if (_userName.isNotEmpty) ...[
-              SizedBox(height: 10),
-              Text("Halo, $_userName", style: TextStyle(fontSize: 18)),
-            ],
+            SizedBox(height: 20),
           ],
         ),
       ),
