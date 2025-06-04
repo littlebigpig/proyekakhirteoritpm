@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/database_helper.dart';
+import '../models/user.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -28,19 +29,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
 
-      // Here you would typically save user data to a database
-      // For now, we'll just save to SharedPreferences and navigate to login
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('registered_name', name);
-      await prefs.setString('registered_email', email);
-      await prefs.setString('registered_password', password);
+      final dbHelper = DatabaseHelper();
+      
+      // Check if username is taken
+      if (await dbHelper.isUsernameTaken(name)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Username sudah digunakan")),
+        );
+        return;
+      }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registrasi berhasil! Silakan login")),
+      // Check if email is taken
+      if (await dbHelper.isEmailTaken(email)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Email sudah digunakan")),
+        );
+        return;
+      }
+
+      // Create new user
+      final user = User(
+        name: name,
+        email: email,
+        password: password,
+        profilePicturePath: '',
       );
 
-      // Navigate back to login screen
-      context.go('/login');
+      // Insert user into database
+      final success = await dbHelper.insertUser(user);
+      
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registrasi berhasil! Silakan login")),
+        );
+        context.go('/login');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal melakukan registrasi")),
+        );
+      }
     }
   }
 

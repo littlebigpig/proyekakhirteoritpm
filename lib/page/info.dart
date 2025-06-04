@@ -442,10 +442,9 @@ class _InfoPageState extends State<InfoPage> {
               backgroundImage: _profilePicturePath != null && _profilePicturePath!.isNotEmpty
                   ? FileImage(File(_profilePicturePath!))
                   : null,
-              onBackgroundImageError: _profilePicturePath != null
+              onBackgroundImageError: _profilePicturePath != null && _profilePicturePath!.isNotEmpty
                   ? (e, stackTrace) {
                       print('Error loading profile picture: $e');
-                      // Reset the profile picture path if the file doesn't exist
                       setState(() {
                         _profilePicturePath = null;
                       });
