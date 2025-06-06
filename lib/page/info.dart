@@ -328,13 +328,18 @@ class _InfoPageState extends State<InfoPage> {
                                 prefixIcon: Icon(Icons.person),
                                 filled: true,
                                 fillColor: Colors.white,
+                                helperText: '2-10 karakter',
                               ),
+                              maxLength: 10,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Username cannot be empty';
+                                  return 'Username tidak boleh kosong';
                                 }
-                                if (value.trim().length < 3) {
-                                  return 'Username must be at least 3 characters';
+                                if (value.trim().length < 2) {
+                                  return 'Username minimal 2 karakter';
+                                }
+                                if (value.trim().length > 10) {
+                                  return 'Username maksimal 10 karakter';
                                 }
                                 return null;
                               },
@@ -348,14 +353,19 @@ class _InfoPageState extends State<InfoPage> {
                                 prefixIcon: Icon(Icons.email),
                                 filled: true,
                                 fillColor: Colors.white,
+                                helperText: 'Maksimal 254 karakter',
                               ),
                               keyboardType: TextInputType.emailAddress,
+                              maxLength: 254,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Email cannot be empty';
+                                  return 'Email tidak boleh kosong';
                                 }
                                 if (!_isValidEmail(value.trim())) {
-                                  return 'Please enter a valid email address';
+                                  return 'Format email tidak valid';
+                                }
+                                if (value.trim().length > 254) {
+                                  return 'Email terlalu panjang';
                                 }
                                 return null;
                               },

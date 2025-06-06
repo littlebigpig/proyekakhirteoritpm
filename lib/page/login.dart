@@ -81,10 +81,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: "Name",
                       prefixIcon: Icon(Icons.person_outline, color: Color(0xFF7BC6FF)),
+                      helperText: '2-10 karakter',
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) =>
-                        value!.isEmpty ? "Name tidak boleh kosong" : null,
+                    keyboardType: TextInputType.text,
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Name tidak boleh kosong";
+                      }
+                      if (value.length < 2) {
+                        return "Name minimal 2 karakter";
+                      }
+                      if (value.length > 10) {
+                        return "Name maksimal 10 karakter";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
@@ -92,10 +104,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: "Password",
                       prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF7BC6FF)),
+                      helperText: '2-10 karakter',
                     ),
                     obscureText: true,
-                    validator: (value) =>
-                        value!.isEmpty ? "Password tidak boleh kosong" : null,
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Password tidak boleh kosong";
+                      }
+                      if (value.length < 2) {
+                        return "Password minimal 2 karakter";
+                      }
+                      if (value.length > 10) {
+                        return "Password maksimal 10 karakter";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 32),
                   SizedBox(

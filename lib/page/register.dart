@@ -117,10 +117,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: "Name",
                       prefixIcon: Icon(Icons.person_outline, color: Color(0xFF7BC6FF)),
+                      helperText: '2-10 karakter',
                     ),
                     keyboardType: TextInputType.text,
-                    validator: (value) =>
-                        value!.isEmpty ? "Name tidak boleh kosong" : null,
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Name tidak boleh kosong";
+                      }
+                      if (value.length < 2) {
+                        return "Name minimal 2 karakter";
+                      }
+                      if (value.length > 10) {
+                        return "Name maksimal 10 karakter";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
@@ -128,14 +140,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: "Email",
                       prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF7BC6FF)),
+                      helperText: 'Maksimal 254 karakter',
                     ),
                     keyboardType: TextInputType.emailAddress,
+                    maxLength: 254,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return "Email tidak boleh kosong";
                       }
                       if (!value.contains('@')) {
                         return "Email tidak valid";
+                      }
+                      if (value.length > 254) {
+                        return "Email terlalu panjang";
+                      }
+                      // More comprehensive email validation
+                      final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                      if (!emailRegExp.hasMatch(value)) {
+                        return "Format email tidak valid";
                       }
                       return null;
                     },
@@ -146,14 +168,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: "Password",
                       prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF7BC6FF)),
+                      helperText: '2-10 karakter',
                     ),
                     obscureText: true,
+                    maxLength: 10,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return "Password tidak boleh kosong";
                       }
-                      if (value.length < 6) {
-                        return "Password minimal 6 karakter";
+                      if (value.length < 2) {
+                        return "Password minimal 2 karakter";
+                      }
+                      if (value.length > 10) {
+                        return "Password maksimal 10 karakter";
                       }
                       return null;
                     },
@@ -164,10 +191,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: "Konfirmasi Password",
                       prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF7BC6FF)),
+                      helperText: '2-10 karakter',
                     ),
                     obscureText: true,
-                    validator: (value) =>
-                        value!.isEmpty ? "Konfirmasi password tidak boleh kosong" : null,
+                    maxLength: 10,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Konfirmasi password tidak boleh kosong";
+                      }
+                      if (value.length < 2) {
+                        return "Password minimal 2 karakter";
+                      }
+                      if (value.length > 10) {
+                        return "Password maksimal 10 karakter";
+                      }
+                      if (value != passwordController.text) {
+                        return "Password tidak sama";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 32),
                   SizedBox(
