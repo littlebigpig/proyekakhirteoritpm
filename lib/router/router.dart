@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tugas2teori/page/anggota.dart';
 import 'package:tugas2teori/page/bantuan.dart';
 import 'package:tugas2teori/page/country_detail.dart';
 import 'package:tugas2teori/page/countrypage.dart';

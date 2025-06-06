@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tugas2teori/router/routes.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,8 @@ import 'package:tugas2teori/models/country.dart';
 import 'package:tugas2teori/services/base_network.dart';
 import 'package:tugas2teori/services/exchange_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:math';
+import 'package:sensors_plus/sensors_plus.dart';
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
@@ -26,9 +28,14 @@ class _HomePageState extends State<HomePage> {
   double? _convertedAmount;
   String _username = "";
 
+  StreamSubscription? _accelerometerSubscription;
+  List<double> _accelerometerValues = [0, 0, 0];
+  DateTime _lastShakeTime = DateTime.now();
+
   @override
   void dispose() {
     _amountController.dispose();
+    _accelerometerSubscription?.cancel();
     super.dispose();
   }
 
@@ -36,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _getCurrentLocation();
     _loadUsername();
+    _accelerometerSubscription = accelerometerEvents.listen(_onAccelerometerEvent);
   }
 
   Future<void> _loadUsername() async {
@@ -130,6 +138,33 @@ class _HomePageState extends State<HomePage> {
         _isLoading = false;
       });
     }
+  }
+
+  void _onAccelerometerEvent(AccelerometerEvent event) {
+    const double shakeThreshold = 15.0;
+    final now = DateTime.now();
+
+    double deltaX = (event.x - _accelerometerValues[0]).abs();
+    double deltaY = (event.y - _accelerometerValues[1]).abs();
+    double deltaZ = (event.z - _accelerometerValues[2]).abs();
+
+    if ((deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) &&
+        now.difference(_lastShakeTime) > Duration(seconds: 2)) {
+      _lastShakeTime = now;
+      // Trigger refresh
+      setState(() {
+        _isLoading = true;
+        _exchangeRate = null;
+        _convertedAmount = null;
+        _amountController.clear();
+      });
+      _getCurrentLocation();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Refreshed by shake!')),
+      );
+    }
+
+    _accelerometerValues = [event.x, event.y, event.z];
   }
 
   @override

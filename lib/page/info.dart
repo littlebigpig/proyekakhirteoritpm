@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tugas2teori/models/daftar_situs.dart';
 import 'package:tugas2teori/router/routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -212,6 +211,9 @@ class _InfoPageState extends State<InfoPage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text('Logout'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
             ),
           ],
         ),
@@ -220,17 +222,9 @@ class _InfoPageState extends State<InfoPage> {
       if (shouldLogout == true) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.clear();
-
-        // Reset daftar situs favorit safely
+        
         if (mounted) {
-          try {
-            final daftarSitus = Provider.of<DaftarSitus>(context, listen: false);
-            daftarSitus.removeAllFavorites();
-          } catch (e) {
-            print('Error clearing favorites: $e');
-          }
-
-          // Navigate to login
+          // Navigate to login page and remove all previous routes
           context.go('/login');
         }
       }

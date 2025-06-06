@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.8.1
 
 
 dependencies:
@@ -28,11 +28,13 @@ dependencies:
   path: ^1.8.3   
   crypto: ^3.0.3
   image_picker: ^1.0.7
+  sensors_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  dart_code_metrics: ^4.19.2
 
 
 flutter:

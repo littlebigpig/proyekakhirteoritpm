@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tugas2teori/models/daftar_situs.dart';
 import 'package:tugas2teori/router/router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas2teori/services/database_helper.dart';
@@ -12,12 +11,7 @@ void main() async {
   final dbHelper = DatabaseHelper();
   await dbHelper.database;
 
-  runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => DaftarSitus())],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

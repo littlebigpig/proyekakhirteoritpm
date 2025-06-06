@@ -9,20 +9,25 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
-linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
-  rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+analyzer:
+  exclude:
+    - "**/*.g.dart" # Exclude generated files
+    - "**/*.freezed.dart" # Exclude generated files
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+dart_code_metrics:
+  metrics:
+    cyclomatic-complexity: 20 # Ambang batas untuk cyclomatic complexity. Di atas ini akan diperingatkan.
+    halstead-volume: 1000 # Ambang batas untuk Halstead Volume.
+    lines-of-code: 100 # Ambang batas untuk total baris kode.
+    maximum-nesting-level: 5 # Ambang batas untuk tingkat nesting.
+    number-of-parameters: 5 # Ambang batas untuk jumlah parameter.
+    source-lines-of-code: 80 # Ambang batas untuk baris kode sumber (non-kosong, non-komentar).
+    maintainability-index: 50 # Ambang batas untuk Maintainability Index (makin rendah makin buruk).
+  metrics-exclude:
+    - test/** # Kecualikan folder test dari analisis metrik
+  rules:
+    # Anda juga bisa menambahkan aturan lint di sini jika ingin.
+    # Contoh:
+    # - avoid-unnecessary-setstate
+    # - prefer-trailing-comma
+    # dll.
