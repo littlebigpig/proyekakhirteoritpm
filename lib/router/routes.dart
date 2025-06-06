@@ -13,4 +13,5 @@ class Routes {
   static String NestedCountryDetail = '/country/detail/:name';
   static String Login = '/login';
   static String Register = '/register';
+  static String SaranKesanPage = '/saran-kesan';
 }

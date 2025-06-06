@@ -3,6 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_helper.dart';
 import '../models/user.dart';
+import '../services/notification_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:io' show Platform;
+import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,6 +18,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _requestNotificationPermission();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.notification.status;
+      if (status.isDenied) {
+        await Permission.notification.request();
+      }
+    }
+  }
+
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       String name = nameController.text;
@@ -23,6 +42,16 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await dbHelper.verifyUser(name, password);
 
       if (user != null) {
+        try {
+          final notificationService = NotificationService();
+          await notificationService.showNotification(
+            title: 'Login Berhasil',
+            body: 'Selamat datang kembali, $name!',
+          );
+        } catch (e) {
+          print('Error showing notification: $e');
+        }
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool("is_logged_in", true);
         await prefs.setString('username', name);

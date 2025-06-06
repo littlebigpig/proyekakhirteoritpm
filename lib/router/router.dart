@@ -11,6 +11,7 @@ import 'package:tugas2teori/page/login.dart';
 import 'package:go_router/go_router.dart';
 import '../layout/layout_scaffold.dart';
 import 'package:tugas2teori/page/register.dart';
+import 'package:tugas2teori/page/sarankesan.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final router = GoRouter(
@@ -63,14 +64,6 @@ final router = GoRouter(
             ),
           ],
         ),
-        /*StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.AnggotaPage,
-              builder: (context, state) => AnggotaPage(),
-            ),
-          ],
-        ),*/
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -82,6 +75,14 @@ final router = GoRouter(
                   builder: (context, state) => BantuanPage(),
                 ),
               ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.AnggotaPage,
+              builder: (context, state) => SaranKesanPage(),
             ),
           ],
         ),

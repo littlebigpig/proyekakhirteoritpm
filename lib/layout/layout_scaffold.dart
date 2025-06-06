@@ -29,8 +29,8 @@ class LayoutScaffold extends StatelessWidget {
             tabs: const [
               GButton(icon: Icons.home, text: 'Home'),
               GButton(icon: Icons.public, text: 'Countries'),
-              //GButton(icon: Icons.person, text: 'Anggota'),
               GButton(icon: Icons.person, text: 'Profile'),
+              GButton(icon: Icons.edit_document, text: 'Kesan & Saran'),
             ],
           ),
         ),

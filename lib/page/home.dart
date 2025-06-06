@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               )
-            : Text('Hello, $_username',
+            : Text('NatNow! | Hello, $_username',
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
               ),
         centerTitle: false,
