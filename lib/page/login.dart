@@ -145,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       TextButton(
+                        key: const Key('login_register_button'),
                         onPressed: () => context.go('/register'),
                         child: Text(
                           "Daftar",
